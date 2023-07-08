@@ -50,14 +50,16 @@ final class ApplicationCoordinator: BaseCoordinator {
         switch tab {
         case .forecast:
             let coordinator = coordinatorsFactory.createForecastCoordinator(router: router)
-            coordinator.finishFlow = { [weak self] in
+            coordinator.finishFlow = { [weak self, weak coordinator] in
+                guard let coordinator else { return }
                 self?.childDidFinish(coordinator)
             }
             addChild(coordinator)
         case .myLocations:
             let coordinator = coordinatorsFactory.createMyLocationsCoordinator(router: router)
             
-            coordinator.finishFlow = { [weak self] in
+            coordinator.finishFlow = { [weak self, weak coordinator] in
+                guard let coordinator else { return }
                 self?.childDidFinish(coordinator as Coordinator)
             }
             addChild(coordinator)

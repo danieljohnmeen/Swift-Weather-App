@@ -34,7 +34,8 @@ final class MyLocationsCoordinatorImpl: BaseCoordinator, MyLocationsCoordinator 
     
     func showForecastForSearchResult(with city: City) {
         let coordinator = coordinatorsFactory.createLocationForecastCoordinator(router: router)
-        coordinator.finishFlow = { [weak self] in
+        coordinator.finishFlow = { [weak self, weak coordinator] in
+            guard let coordinator else { return }
             self?.childDidFinish(coordinator as Coordinator)
         }
         coordinator.start(with: city)
@@ -42,7 +43,8 @@ final class MyLocationsCoordinatorImpl: BaseCoordinator, MyLocationsCoordinator 
     
     func showForecastForCity(with weather: Weather?) {
         let coordinator = coordinatorsFactory.createSavedLocationForecastCoordinator(router: router)
-        coordinator.finishFlow = { [weak self] in
+        coordinator.finishFlow = { [weak self, weak coordinator] in
+            guard let coordinator else { return }
             self?.childDidFinish(coordinator as Coordinator)
         }
         coordinator.start(with: weather)
